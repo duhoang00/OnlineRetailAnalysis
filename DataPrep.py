@@ -93,16 +93,16 @@ def DataPrep(applyFilter):
     df['YearMonth'] = df['Year'] + df['Month']
 
     # Add Revenue column
-    df['Revenue'] = float(df['UnitPrice']) * str(df['Quantity'])
-    df['Revenue'].apply(lambda x: float(x))
-
+    df['Revenue'] = df['UnitPrice'].astype(float) * df['Quantity'].astype(float)
+    
 
     # Filter for suitable data
     if applyFilter == True:
         df = dataFilter(df)
 
-    # Type date time
+    # Change columns type
     df['Date'] = pd.to_datetime(df['Date'], utc=True)
+    df['YearMonth'] = pd.to_numeric(df['YearMonth'], downcast='integer')
 
     # Set date column as Index - Did not work
     df.set_index('Date', inplace=True)
