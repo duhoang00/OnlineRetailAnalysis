@@ -1,7 +1,20 @@
 import pandas as pd
 
+customer = None
+
+def RFMAnalysis(df):
+    global customer
+
+    recencyDf(df)
+    frequencyDf(df)
+    monetaryDf(df)
+
+    return customer
+
 
 def recencyDf(df):
+    global customer
+
     # Generate new dataframe based on unique CustomerID to keep track of RFM scores
     customer = pd.DataFrame(df['CustomerID'].unique())
     customer.columns = ['CustomerID']
@@ -21,10 +34,10 @@ def recencyDf(df):
     customer = pd.merge(
         customer, recency[['CustomerID', 'Recency']], on='CustomerID')
 
-    return customer
-
 
 def frequencyDf(df):
+    global customer
+
     # Count number of invoices per CustomerID and store in new frequency Dataframe
     frequency = df.groupby(
         'CustomerID').InvoiceDate.count().reset_index()
@@ -34,4 +47,13 @@ def frequencyDf(df):
 
     customer = pd.merge(customer, frequency, on='CustomerID')
 
-    return frequency
+
+def monetaryDf(df):
+    global customer
+
+    # Revenue per transaction has already been calculated as per KPIs section
+    # Grouping revenue per Customer ID
+    revenue = df.groupby('CustomerID').Revenue.sum().reset_index()
+
+    # Consolidate Revenue to existing Customer DataFrame
+    customer = pd.merge(customer, revenue, on='CustomerID')
