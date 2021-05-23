@@ -2,6 +2,7 @@ import pandas as pd
 
 customer = None
 
+
 def RFMAnalysis(df):
     global customer
 
@@ -19,7 +20,7 @@ def recencyDf(df):
     customer = pd.DataFrame(df['CustomerID'].unique())
     customer.columns = ['CustomerID']
 
-    # Generate new data frame based on latest Invoice date from retail_ppp dataframe per Customer (groupby = CustomerID)
+    # Generate new data frame based on latest Invoice date from dataframe dataframe per Customer (groupby = CustomerID)
     recency = df.groupby('CustomerID').InvoiceDate.max().reset_index()
     recency.columns = ['CustomerID', 'LastPurchaseDate']
 

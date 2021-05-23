@@ -2,3 +2,5 @@ pandas
 seaborn
 numpy
 openpyxl
+sklearn
+matplotlib

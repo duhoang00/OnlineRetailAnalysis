@@ -90,8 +90,8 @@ def DataPrep(applyFilter):
     df['YearMonth'] = df['Year'] + df['Month']
 
     # Add Revenue column
-    df['Revenue'] = df['UnitPrice'].astype(float) * df['Quantity'].astype(float)
-    
+    df['Revenue'] = df['UnitPrice'].astype(
+        float) * df['Quantity'].astype(float)
 
     # Filter for suitable data
     if applyFilter == True:

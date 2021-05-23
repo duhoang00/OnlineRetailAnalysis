@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from Lib import print2Excel, analysisAnimation
 from DataPrep import DataPrep
-from KPIAnalysis import monthlyKPI, customerKPI
 from RFMAnalysis import RFMAnalysis
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
@@ -78,24 +77,19 @@ def valueCustomer(df):
 def Analysis():
     df = DataPrep(applyFilter=True)
 
-    mKPI = monthlyKPI(df)
-
-    newDf, cKPI = customerKPI(df)
-
-    customerRFM = RFMAnalysis(newDf)
+    customerRFM = RFMAnalysis(df)
 
     # Created 3 fig images
-    # RFMScoreImage(customerRFM)
+    RFMScoreImage(customerRFM)
 
     # Created 3 fig_clus images
     clusDf = KMeansCluster(customerRFM, createImage=False)
-
-    print(clusDf.head())
 
     valueCustomer(clusDf)
 
 
 def process():
+    print('**Hoang Nguyen Minh Du, code K184060779, class K18406C**')
     Analysis()
 
 
