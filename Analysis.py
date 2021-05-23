@@ -76,8 +76,10 @@ def valueCustomer(df):
 
 def Analysis():
     df = DataPrep(applyFilter=True)
+    print(df.head())
 
     customerRFM = RFMAnalysis(df)
+    print(customerRFM.head())
 
     # Created 3 fig images
     RFMScoreImage(customerRFM)
