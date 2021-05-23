@@ -1,5 +1,4 @@
 import pandas as pd
-import seaborn as sns
 import numpy as np
 from Lib import print2Excel, analysisAnimation
 from DataPrep import DataPrep
@@ -26,7 +25,7 @@ def RFMScoreImage(customerRFM):
     fig_Frequency_Revenue.savefig('fig_Frequency_Revenue.png')
 
 
-def KMeansCluster(df):
+def KMeansCluster(df, createImage):
     # Number of clusters
     k = 3
 
@@ -39,26 +38,41 @@ def KMeansCluster(df):
     cluster_labels = model.labels_
 
     Xstd['clusters'] = cluster_labels
+    df['clusters'] = cluster_labels
 
-    dataset = Xstd.values
-    colors = np.array(['r', 'g', 'b'])
+    if createImage == True:
+        dataset = Xstd.values
+        colors = np.array(['r', 'g', 'b'])
 
-    cen, distances, cluster_assigning = k_means(dataset, k)
+        cen, distances, cluster_assigning = k_means(dataset, k)
 
-    plt.scatter(x = Xstd['Recency'], y = Xstd['Frequency'], c=colors[distances], s=2)
-    plt.xlabel('Recency')
-    plt.ylabel('Frequency')
-    plt.savefig('fig_clus_Recency_Frequency.png', dpi=300, bbox_inches='tight')
+        plt.scatter(x=Xstd['Recency'], y=Xstd['Frequency'],
+                    c=colors[distances], s=2)
+        plt.xlabel('Recency')
+        plt.ylabel('Frequency')
+        plt.savefig('fig_clus_Recency_Frequency.png',
+                    dpi=300, bbox_inches='tight')
 
-    plt.scatter(x = Xstd['Recency'], y = Xstd['Revenue'], c=colors[distances], s=2)
-    plt.xlabel('Recency')
-    plt.ylabel('Revenue')
-    plt.savefig('fig_clus_Recency_Revenue.png', dpi=300, bbox_inches='tight')
+        plt.scatter(x=Xstd['Recency'], y=Xstd['Revenue'],
+                    c=colors[distances], s=2)
+        plt.xlabel('Recency')
+        plt.ylabel('Revenue')
+        plt.savefig('fig_clus_Recency_Revenue.png',
+                    dpi=300, bbox_inches='tight')
 
-    plt.scatter(x = Xstd['Frequency'], y = Xstd['Revenue'], c=colors[distances], s=2)
-    plt.xlabel('Frequency')
-    plt.ylabel('Revenue')
-    plt.savefig('fig_clus_Frequency_Revenue.png', dpi=300, bbox_inches='tight')
+        plt.scatter(x=Xstd['Frequency'], y=Xstd['Revenue'],
+                    c=colors[distances], s=2)
+        plt.xlabel('Frequency')
+        plt.ylabel('Revenue')
+        plt.savefig('fig_clus_Frequency_Revenue.png',
+                    dpi=300, bbox_inches='tight')
+
+    return df
+
+
+def valueCustomer(df):
+    valueCustomerDf = df.loc[df['clusters'] == 1]
+    print2Excel(valueCustomerDf, 'ValueCustomer.xlsx')
 
 
 def Analysis():
@@ -70,9 +84,15 @@ def Analysis():
 
     customerRFM = RFMAnalysis(newDf)
 
+    # Created 3 fig images
     # RFMScoreImage(customerRFM)
 
-    KMeansCluster(customerRFM)
+    # Created 3 fig_clus images
+    clusDf = KMeansCluster(customerRFM, createImage=False)
+
+    print(clusDf.head())
+
+    valueCustomer(clusDf)
 
 
 def process():
